@@ -6,6 +6,7 @@ public class Main {
     Scanner scan = new Scanner(System.in);
     ArrayList<User> users = new ArrayList<>();
     ArrayList<Product> products = new ArrayList<>();
+    ArrayList<Product> cart = new ArrayList<>();
     int currUserIdx = -1;
 
     public Main() {
@@ -179,12 +180,49 @@ public class Main {
     }
 
     private void pickProduct() {
-        System.out.println("---------------------------------------");
-        System.out.printf("| %-3s | %-16s | %-10s |\n", "No.", "Product Name", "Price");
-        System.out.println("---------------------------------------");
-        for (int i=0; i<10; i++) {
-            System.out.printf("| %-3d | %16s | %10s |\n", i, products.get(i).getName(), products.get(i).getPrice());
+        System.out.println("--------------------------------------------");
+        System.out.printf("| %-3s | %-18s | %-13s |\n", "No.", "Product Name", "Price");
+        System.out.println("--------------------------------------------");
+        for (int i=0; i<products.size(); i++) {
+            System.out.printf("| %-3d | %-18s | Rp %-10s |\n", i, products.get(i).getName(), products.get(i).getPrice());
         }
+        System.out.println("--------------------------------------------");
+
+        int chooseIdx = -1;
+        do {
+            int err;
+            do {
+                err = 0;
+                try {
+                    System.out.printf("Pick a product by index [%d - %d]: ", 0, products.size()-1);
+                    chooseIdx = scan.nextInt();
+                    scan.nextLine();
+                } catch (Exception e) {
+                    err = 1;
+                    scan.nextLine();
+                }
+            } while (err == 1);
+
+            if (chooseIdx < 0 || chooseIdx >= products.size()) {
+                System.out.println("Product not found or index out of bound!");
+                continue;
+            } else {
+                String conf;
+                System.out.printf("Are you sure to pick this product? [Y | N] : ");
+                conf = scan.nextLine();
+                if (conf.equals("N") || conf.equals("Y") || conf.equals("n") || conf.equals("y")) {
+                    if (conf.equals("N") || conf.equals("n")) {
+                        continue;
+                    }
+                } else {
+                    continue;
+                }
+            }
+            break;
+        } while (true);
+
+        cart.add(products.get(chooseIdx));
+        users.get(currUserIdx).setCart(cart);
     }
 
     private void addMoney() {
