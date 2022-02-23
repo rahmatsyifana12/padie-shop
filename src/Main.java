@@ -10,38 +10,37 @@ public class Main {
     int currUserIdx = -1;
 
     public Main() {
-        pickProduct();
-//        int choose = 0;
-//        do {
-//            clear();
-//            System.out.println("Padie Shop ~");
-//            System.out.println("------------------");
-//            System.out.println("1. Login");
-//            System.out.println("2. Register");
-//            System.out.println("3. Exit");
-//            int err;
-//            do {
-//                err = 0;
-//                try {
-//                    System.out.printf(">> ");
-//                    choose = scan.nextInt();
-//                    scan.nextLine();
-//                } catch (Exception e) {
-//                    err = 1;
-//                    scan.nextLine();
-//                }
-//            } while (err == 1);
-//
-//            switch (choose) {
-//                case 1:
-//                    login();
-//                    break;
-//                case 2:
-//                    registerUser();
-//                    break;
-//            }
-//
-//        } while (choose != 3);
+        int choose = 0;
+        do {
+            clear();
+            System.out.println("Padie Shop ~");
+            System.out.println("------------------");
+            System.out.println("1. Login");
+            System.out.println("2. Register");
+            System.out.println("3. Exit");
+            int err;
+            do {
+                err = 0;
+                try {
+                    System.out.printf(">> ");
+                    choose = scan.nextInt();
+                    scan.nextLine();
+                } catch (Exception e) {
+                    err = 1;
+                    scan.nextLine();
+                }
+            } while (err == 1);
+
+            switch (choose) {
+                case 1:
+                    login();
+                    break;
+                case 2:
+                    registerUser();
+                    break;
+            }
+
+        } while (choose != 3);
     }
 
     private void adminMenu() {
@@ -84,7 +83,7 @@ public class Main {
         if (name.endsWith(" [F]")) {
             String expDate;
             expDate = scan.nextLine();
-            products.add(new Food(name, price + price/10, expDate));
+            products.add(new Food(name, price + price/10, "Food", expDate));
         }
         else if (name.endsWith(" [C]")) {
             String size = "";
@@ -94,11 +93,11 @@ public class Main {
                     break;
                 }
             } while (true);
-            products.add(new Food(name, price + price/4, size));
+            products.add(new Food(name, price + price/4, "Cloth", size));
         } else {
             String version;
             version = scan.nextLine();
-            products.add(new Food(name, price + price*3/10, version));
+            products.add(new Food(name, price + price*3/10, "Technology", version));
         }
     }
 
@@ -173,7 +172,7 @@ public class Main {
                     pickProduct();
                     break;
                 case 2:
-//                    checkout();
+                    checkOut();
                     break;
             }
         } while (choose != 3);
@@ -223,6 +222,24 @@ public class Main {
 
         cart.add(products.get(chooseIdx));
         users.get(currUserIdx).setCart(cart);
+    }
+
+    private void checkOut() {
+        String conf;
+        do {
+            System.out.printf("Are you sure to check out? [Y | N] : ");
+            conf = scan.nextLine();
+            if (conf.equals("N") || conf.equals("Y") || conf.equals("n") || conf.equals("y")) {
+                if (conf.equals("N") || conf.equals("n")) {
+                    return;
+                }
+            } else {
+                continue;
+            }
+            break;
+        } while (true);
+
+
     }
 
     private void addMoney() {

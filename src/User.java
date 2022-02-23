@@ -8,6 +8,7 @@ public class User {
     private String password;
     private int accountBalance;
     private ArrayList<Product> cart = new ArrayList<>();
+    private ArrayList<Struct> structs = new ArrayList<>();
 
     public User(String username, String fullName, String email, String password) {
         this.username = username;
@@ -63,5 +64,13 @@ public class User {
 
     public void setCart(ArrayList<Product> cart) {
         this.cart = cart;
+    }
+
+    public ArrayList<Struct> getStructs() {
+        return structs;
+    }
+
+    public void setStructs(ArrayList<Struct> structs) {
+        this.structs = structs;
     }
 }
