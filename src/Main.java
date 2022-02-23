@@ -8,6 +8,7 @@ public class Main {
     ArrayList<Product> products = new ArrayList<>();
     ArrayList<Product> cart = new ArrayList<>();
     int currUserIdx = -1;
+    int structId = 1;
 
     public Main() {
         int choose = 0;
@@ -239,7 +240,23 @@ public class Main {
             break;
         } while (true);
 
+        int totalPrice = 0;
+        for (int i=0; i<users.get(currUserIdx).getCart().size(); i++) {
+            totalPrice += users.get(currUserIdx).getCart().get(i).getPrice();
+        }
 
+        Struct newStruct = new Struct(structId, totalPrice);
+        newStruct.setProducts(users.get(currUserIdx).getCart());
+
+        if (users.get(currUserIdx).getStructs().size() == 0) {
+            ArrayList<Struct> newStructs = new ArrayList<>();
+            newStructs.add(newStruct);
+            users.get(currUserIdx).setStructs(newStructs);
+        } else {
+            ArrayList<Struct> newStructs = users.get(currUserIdx).getStructs();
+            newStructs.add(newStruct);
+            users.get(currUserIdx).setStructs(newStructs);
+        }
     }
 
     private void addMoney() {
