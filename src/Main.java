@@ -9,40 +9,41 @@ public class Main {
     int currUserIdx = -1;
 
     public Main() {
-        int choose = 0;
-        do {
-            clear();
-            System.out.println("Padie Shop ~");
-            System.out.println("------------------");
-            System.out.println("1. Login");
-            System.out.println("2. Register");
-            System.out.println("3. Exit");
-            int err;
-            do {
-                err = 0;
-                try {
-                    System.out.printf(">> ");
-                    choose = scan.nextInt();
-                    scan.nextLine();
-                } catch (Exception e) {
-                    err = 1;
-                    scan.nextLine();
-                }
-            } while (err == 1);
-
-            switch (choose) {
-                case 1:
-                    login();
-                    break;
-                case 2:
-                    registerUser();
-                    break;
-            }
-
-        } while (choose != 3);
+        pickProduct();
+//        int choose = 0;
+//        do {
+//            clear();
+//            System.out.println("Padie Shop ~");
+//            System.out.println("------------------");
+//            System.out.println("1. Login");
+//            System.out.println("2. Register");
+//            System.out.println("3. Exit");
+//            int err;
+//            do {
+//                err = 0;
+//                try {
+//                    System.out.printf(">> ");
+//                    choose = scan.nextInt();
+//                    scan.nextLine();
+//                } catch (Exception e) {
+//                    err = 1;
+//                    scan.nextLine();
+//                }
+//            } while (err == 1);
+//
+//            switch (choose) {
+//                case 1:
+//                    login();
+//                    break;
+//                case 2:
+//                    registerUser();
+//                    break;
+//            }
+//
+//        } while (choose != 3);
     }
 
-    public void adminMenu() {
+    private void adminMenu() {
         String name;
         int price = 0;
 
@@ -100,11 +101,11 @@ public class Main {
         }
     }
 
-    public boolean isProduct(String name) {
+    private boolean isProduct(String name) {
         return name.endsWith(" [F]") || name.endsWith(" [C]") || name.endsWith(" [T]");
     }
 
-    public void mainMenu() {
+    private void mainMenu() {
         int choose = 0;
         do {
             clear();
@@ -147,7 +148,7 @@ public class Main {
         currUserIdx = -1;
     }
 
-    public void buyProduct() {
+    private void buyProduct() {
         int choose = 0;
         do {
             System.out.println("1. Pick a Product");
@@ -168,7 +169,7 @@ public class Main {
 
             switch (choose) {
                 case 1:
-//                    pickProduct();
+                    pickProduct();
                     break;
                 case 2:
 //                    checkout();
@@ -177,7 +178,16 @@ public class Main {
         } while (choose != 3);
     }
 
-    public void addMoney() {
+    private void pickProduct() {
+        System.out.println("---------------------------------------");
+        System.out.printf("| %-3s | %-16s | %-10s |\n", "No.", "Product Name", "Price");
+        System.out.println("---------------------------------------");
+        for (int i=0; i<10; i++) {
+            System.out.printf("| %-3d | %16s | %10s |\n", i, products.get(i).getName(), products.get(i).getPrice());
+        }
+    }
+
+    private void addMoney() {
         clear();
         int nominal = 0;
         do {
@@ -203,14 +213,14 @@ public class Main {
         } while (true);
     }
 
-    public void checkAccBalance() {
+    private void checkAccBalance() {
         clear();
         System.out.println("Your Account Balance : Rp" + users.get(currUserIdx).getAccountBalance() + ",00");
         System.out.println("Click any key to continue . . .");
         scan.nextLine();
     }
 
-    public void login() {
+    private void login() {
         String username;
         String password;
         System.out.printf("Username : ");
@@ -237,7 +247,7 @@ public class Main {
         scan.nextLine();
     }
 
-    public void registerUser() {
+    private void registerUser() {
         String username;
         String fullName;
         String email;
@@ -286,7 +296,7 @@ public class Main {
         scan.nextLine();
     }
 
-    public boolean isName(String uname) {
+    private boolean isName(String uname) {
         int len = uname.length();
         if (len >= 3 && len <= 16) {
             return true;
@@ -294,7 +304,7 @@ public class Main {
         return false;
     }
 
-    public boolean isFullName(String fullName) {
+    private boolean isFullName(String fullName) {
         if (!isName(fullName)) {
             return false;
         }
@@ -307,7 +317,7 @@ public class Main {
         return true;
     }
 
-    public boolean isEmail(String email) {
+    private boolean isEmail(String email) {
         int len = email.length();
         if (len < 5 || len > 16) {
             return false;
@@ -323,7 +333,7 @@ public class Main {
         return adaAdd && email.endsWith(".com") || email.endsWith(".net");
     }
 
-    public boolean isPassword(String password) {
+    private boolean isPassword(String password) {
         int len = password.length();
         if (len < 3 || len > 40) {
             return false;
@@ -346,7 +356,7 @@ public class Main {
         new Main();
     }
 
-    public void clear() {
+    private void clear() {
         for (int i=0; i<50; i++) {
             System.out.println();
         }
