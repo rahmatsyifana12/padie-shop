@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 
-public class Struct {
+public class Receipt {
 
     private int id;
     private int totalPrice;
     private ArrayList<Product> products;
 
-    public Struct(int id, int totalPrice) {
+    public Receipt(int id, int totalPrice) {
         this.id = id;
         this.totalPrice = totalPrice;
     }
