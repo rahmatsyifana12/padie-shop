@@ -1,3 +1,1 @@
-Program not completely finished.
-
-Stay tuned for further updates.
+The program is not finish yet. Stay tuned for further updates.
