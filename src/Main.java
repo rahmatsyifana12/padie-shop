@@ -153,6 +153,7 @@ public class Main {
     private void buyProduct() {
         int choose = 0;
         do {
+            clear();
             System.out.println("1. Pick a Product");
             System.out.println("2. Check Out");
             System.out.println("3. Back");
@@ -181,6 +182,14 @@ public class Main {
     }
 
     private void pickProduct() {
+        if (products.size() == 0) {
+            System.out.println("There is no available product yet.");
+            System.out.println("Press any key to continue . . .");
+            scan.nextLine();
+            return;
+        }
+
+        clear();
         System.out.println("--------------------------------------------");
         System.out.printf("| %-3s | %-18s | %-13s |\n", "No.", "Product Name", "Price");
         System.out.println("--------------------------------------------");
@@ -227,8 +236,16 @@ public class Main {
     }
 
     private void checkOut() {
+        if (users.get(currUserIdx).getCart().size() == 0) {
+            System.out.println("Your cart is empty.");
+            System.out.println("Press any key to continue . . .");
+            scan.nextLine();
+            return;
+        }
+
         String conf;
         do {
+            clear();
             System.out.printf("Are you sure to check out? [Y | N] : ");
             conf = scan.nextLine();
             if (conf.equals("N") || conf.equals("Y") || conf.equals("n") || conf.equals("y")) {
@@ -268,7 +285,16 @@ public class Main {
         int recIdx = -1;
         User currUser = users.get(currUserIdx);
         ArrayList<Receipt> currUserReceipts = currUser.getReceipts();
+
+        if (currUserReceipts.size() == 0) {
+            System.out.println("You don't have any receipt history.");
+            System.out.println("Press any key to continue . . .");
+            scan.nextLine();
+            return;
+        }
+
         do {
+            clear();
             System.out.println("--------------------");
             System.out.println("| No. | Receipt ID |");
             System.out.println("--------------------");
