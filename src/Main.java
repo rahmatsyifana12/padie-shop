@@ -369,6 +369,9 @@ public class Main {
             }
             break;
         } while (true);
+
+        int oldMoney = users.get(currUserIdx).getAccountBalance();
+        users.get(currUserIdx).setAccountBalance(oldMoney + nominal);
     }
 
     private void checkAccBalance() {
@@ -392,7 +395,7 @@ public class Main {
         }
 
         for (int i=0; i<users.size(); i++) {
-            if (users.get(i).getEmail().equals(username) && users.get(i).getPassword().equals(password)) {
+            if (users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)) {
                 System.out.println("Login successful");
                 System.out.println("Press any key to continue . . .");
                 currUserIdx = i;
@@ -416,7 +419,7 @@ public class Main {
         do {
             System.out.printf("Username : ");
             username = scan.nextLine();
-            if (isName(username)) {
+            if (!isName(username)) {
                 continue;
             }
             break;
@@ -468,9 +471,10 @@ public class Main {
             return false;
         }
         for (int i=0; i<fullName.length(); i++) {
-            if (fullName.charAt(i) >= 65 && fullName.charAt(i) <= 90 || fullName.charAt(i) >= 97 && fullName.charAt(i) <= 122) {
+            if ((fullName.charAt(i) >= 'A' && fullName.charAt(i) <= 'Z') || (fullName.charAt(i) >= 'a' && fullName.charAt(i) <= 'z') || fullName.charAt(i) == ' ') {
                 continue;
             }
+            System.out.println("bug");
             return false;
         }
         return true;
