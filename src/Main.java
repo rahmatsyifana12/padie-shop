@@ -45,61 +45,84 @@ public class Main {
     }
 
     private void adminMenu() {
-        String name;
-        int price = 0;
-
         do {
-            System.out.printf("Product name : ");
-            name = scan.nextLine();
-            if (!isName(name)) {
-                continue;
-            }
-            if (!isProduct(name)) {
-                continue;
-            }
-            break;
-        } while (true);
-
-        do {
-            int err;
+            String name;
+            int price = 0;
+            clear();
             do {
-                err = 0;
-                try {
-                    System.out.printf("Price : ");
-                    price = scan.nextInt();
-                    scan.nextLine();
-                } catch (Exception e) {
-                    err = 1;
-                    scan.nextLine();
+                System.out.println("Product name must end with [F] | [C] | [T]");
+                System.out.printf("Product name [input 0 to go back] : ");
+                name = scan.nextLine();
+                if (name.equals("0")) {
+                    return;
                 }
-            } while (err == 1);
+                if (!isName(name)) {
+                    continue;
+                }
+                if (!isProduct(name)) {
+                    continue;
+                }
+                break;
+            } while (true);
 
-            if (price < 1000) {
-                continue;
+            do {
+                int err;
+                do {
+                    err = 0;
+                    try {
+                        System.out.printf("Price : ");
+                        price = scan.nextInt();
+                        scan.nextLine();
+                    } catch (Exception e) {
+                        err = 1;
+                        scan.nextLine();
+                    }
+                } while (err == 1);
+
+                if (price < 1000) {
+                    continue;
+                }
+
+                break;
+            } while (true);
+
+            if (name.endsWith(" [F]")) {
+                String expDate;
+                System.out.printf("Expire date : ");
+                expDate = scan.nextLine();
+                products.add(new Food(name, price + price/10, "Food", expDate));
+            }
+            else if (name.endsWith(" [C]")) {
+                String size = "";
+                do {
+                    System.out.printf("Size : ");
+                    size = scan.nextLine();
+                    if (size.equals("S") || size.equals("M") || size.equals("L") || size.equals("XL")) {
+                        break;
+                    }
+                } while (true);
+                products.add(new Food(name, price + price/4, "Cloth", size));
+            } else {
+                String version;
+                System.out.printf("Version : ");
+                version = scan.nextLine();
+                products.add(new Food(name, price + price*3/10, "Technology", version));
             }
 
-            break;
-        } while (true);
-
-        if (name.endsWith(" [F]")) {
-            String expDate;
-            expDate = scan.nextLine();
-            products.add(new Food(name, price + price/10, "Food", expDate));
-        }
-        else if (name.endsWith(" [C]")) {
-            String size = "";
+            String conf;
             do {
-                size = scan.nextLine();
-                if (size.equals("S") || size.equals("M") || size.equals("L") || size.equals("XL")) {
-                    break;
+                System.out.printf("Do you want to add another product? [Y | N] : ");
+                conf = scan.nextLine();
+                if (conf.equals("N") || conf.equals("Y") || conf.equals("n") || conf.equals("y")) {
+                    if (conf.equals("Y") || conf.equals("y")) {
+                        break;
+                    }
+                    else if (conf.equals("N") || conf.equals("y")) {
+                        return;
+                    }
                 }
             } while (true);
-            products.add(new Food(name, price + price/4, "Cloth", size));
-        } else {
-            String version;
-            version = scan.nextLine();
-            products.add(new Food(name, price + price*3/10, "Technology", version));
-        }
+        } while (true);
     }
 
     private boolean isProduct(String name) {
@@ -194,7 +217,7 @@ public class Main {
         System.out.printf("| %-3s | %-18s | %-13s |\n", "No.", "Product Name", "Price");
         System.out.println("--------------------------------------------");
         for (int i=0; i<products.size(); i++) {
-            System.out.printf("| %-3d | %-18s | Rp %-10s |\n", i, products.get(i).getName(), products.get(i).getPrice());
+            System.out.printf("| %-3d | %-18s | Rp %-10s |\n", i+1, products.get(i).getName(), products.get(i).getPrice());
         }
         System.out.println("--------------------------------------------");
 
@@ -204,7 +227,7 @@ public class Main {
             do {
                 err = 0;
                 try {
-                    System.out.printf("Pick a product by index [%d - %d]: ", 0, products.size()-1);
+                    System.out.printf("Pick a product by number [%d - %d]: ", 1, products.size());
                     chooseIdx = scan.nextInt();
                     scan.nextLine();
                 } catch (Exception e) {
@@ -213,8 +236,8 @@ public class Main {
                 }
             } while (err == 1);
 
-            if (chooseIdx < 0 || chooseIdx >= products.size()) {
-                System.out.println("Product not found or index out of bound!");
+            if (chooseIdx < 1 || chooseIdx > products.size()) {
+                System.out.println("Product not found or number is out of bound!");
                 continue;
             } else {
                 String conf;
@@ -231,7 +254,7 @@ public class Main {
             break;
         } while (true);
 
-        cart.add(products.get(chooseIdx));
+        cart.add(products.get(chooseIdx-1));
         users.get(currUserIdx).setCart(cart);
     }
 
@@ -263,6 +286,12 @@ public class Main {
             totalPrice += users.get(currUserIdx).getCart().get(i).getPrice();
         }
 
+        if (users.get(currUserIdx).getAccountBalance() < totalPrice) {
+            System.out.println("Your account balance is not enough!");
+            System.out.println("Press any key to continue . . .");
+            return;
+        }
+
         Receipt newReceipt = new Receipt(structId, totalPrice);
         newReceipt.setProducts(users.get(currUserIdx).getCart());
         structId++;
@@ -276,6 +305,9 @@ public class Main {
             newReceipts.add(newReceipt);
             users.get(currUserIdx).setReceipts(newReceipts);
         }
+
+        int oldAccBalance = users.get(currUserIdx).getAccountBalance();
+        users.get(currUserIdx).setAccountBalance(oldAccBalance - totalPrice);
 
         displayReceipt(users.get(currUserIdx).getReceipts().size() - 1);
     }
