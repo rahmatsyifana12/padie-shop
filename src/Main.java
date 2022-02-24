@@ -317,6 +317,8 @@ public class Main {
     private void displayReceipt(int recIdx) {
         Receipt currUserReceipt = users.get(currUserIdx).getReceipts().get(recIdx);
         ArrayList<Product> currUserReceiptsProducts = currUserReceipt.getProducts();
+
+        clear();
         System.out.println("Padie Shop");
         System.out.println("---------------------------------------");
         System.out.printf("ID: #%d\n\n", currUserReceipt.getId());
