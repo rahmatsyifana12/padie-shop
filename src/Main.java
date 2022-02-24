@@ -109,7 +109,7 @@ public class Main {
                 products.add(new Food(name, price + price*3/10, "Technology", version));
             }
 
-            String conf;
+            String conf = "";
             do {
                 System.out.printf("Do you want to add another product? [Y | N] : ");
                 conf = scan.nextLine();
@@ -117,7 +117,7 @@ public class Main {
                     if (conf.equals("Y") || conf.equals("y")) {
                         break;
                     }
-                    else if (conf.equals("N") || conf.equals("y")) {
+                    else if (conf.equals("N") || conf.equals("n")) {
                         return;
                     }
                 }
@@ -266,10 +266,37 @@ public class Main {
             return;
         }
 
+        clear();
+        int totalPrice = 0;
+        User currUser = users.get(currUserIdx);
+        System.out.println("Padie Shop");
+        System.out.println("---------------------------------------");
+        for (int i=0; i<currUser.getCart().size(); i++) {
+            if (currUser.getCart().get(i) instanceof Food) {
+                Food food = (Food)currUser.getCart().get(i);
+                System.out.printf("%d. %s - Rp %d\n", i+1, food.getName(), food.getPrice());
+                System.out.printf("    - Expire date: %s\n", food.getExpiredDate());
+            }
+            else if (currUser.getCart().get(i) instanceof Cloth) {
+                Cloth cloth = (Cloth)currUser.getCart().get(i);
+                System.out.printf("%d. %s - Rp %d\n", i+1, cloth.getName(), cloth.getPrice());
+                System.out.printf("    - Size: %s\n", cloth.getSize());
+            } else {
+                Technology tech = (Technology)currUser.getCart().get(i);
+                System.out.printf("%d. %s - Rp %d\n", i+1, tech.getName(), tech.getPrice());
+                System.out.printf("    - Version: %s\n", tech.getVersion());
+            }
+            totalPrice += currUser.getCart().get(i).getPrice();
+        }
+        System.out.println("---------------------------------------");
+        System.out.println("Quantity    : " + currUser.getCart().size());
+        System.out.println("Total price : " + totalPrice);
+        scan.nextLine();
+
         String conf;
         do {
             clear();
-            System.out.printf("Are you sure to check out? [Y | N] : ");
+            System.out.printf("\nAre you sure to check out? [Y | N] : ");
             conf = scan.nextLine();
             if (conf.equals("N") || conf.equals("Y") || conf.equals("n") || conf.equals("y")) {
                 if (conf.equals("N") || conf.equals("n")) {
@@ -281,14 +308,10 @@ public class Main {
             break;
         } while (true);
 
-        int totalPrice = 0;
-        for (int i=0; i<users.get(currUserIdx).getCart().size(); i++) {
-            totalPrice += users.get(currUserIdx).getCart().get(i).getPrice();
-        }
-
         if (users.get(currUserIdx).getAccountBalance() < totalPrice) {
             System.out.println("Your account balance is not enough!");
             System.out.println("Press any key to continue . . .");
+            scan.nextLine();
             return;
         }
 
