@@ -135,7 +135,7 @@ public class Main {
                     buyProduct();
                     break;
                 case 2:
-//                    displayPurchaseHistory();
+                    displayPurchaseHistory();
                     break;
                 case 3:
                     addMoney();
@@ -147,6 +147,7 @@ public class Main {
 
         } while (choose != 5);
         currUserIdx = -1;
+        cart.clear();
     }
 
     private void buyProduct() {
@@ -245,18 +246,101 @@ public class Main {
             totalPrice += users.get(currUserIdx).getCart().get(i).getPrice();
         }
 
-        Struct newStruct = new Struct(structId, totalPrice);
-        newStruct.setProducts(users.get(currUserIdx).getCart());
+        Receipt newReceipt = new Receipt(structId, totalPrice);
+        newReceipt.setProducts(users.get(currUserIdx).getCart());
+        structId++;
 
-        if (users.get(currUserIdx).getStructs().size() == 0) {
-            ArrayList<Struct> newStructs = new ArrayList<>();
-            newStructs.add(newStruct);
-            users.get(currUserIdx).setStructs(newStructs);
+        if (users.get(currUserIdx).getReceipts().size() == 0) {
+            ArrayList<Receipt> newReceipts = new ArrayList<>();
+            newReceipts.add(newReceipt);
+            users.get(currUserIdx).setReceipts(newReceipts);
         } else {
-            ArrayList<Struct> newStructs = users.get(currUserIdx).getStructs();
-            newStructs.add(newStruct);
-            users.get(currUserIdx).setStructs(newStructs);
+            ArrayList<Receipt> newReceipts = users.get(currUserIdx).getReceipts();
+            newReceipts.add(newReceipt);
+            users.get(currUserIdx).setReceipts(newReceipts);
         }
+
+        displayReceipt(users.get(currUserIdx).getReceipts().size() - 1);
+    }
+
+    private void displayPurchaseHistory() {
+        int recId = 0;
+        int recIdx = -1;
+        User currUser = users.get(currUserIdx);
+        ArrayList<Receipt> currUserReceipts = currUser.getReceipts();
+        do {
+            System.out.println("--------------------");
+            System.out.println("| No. | Receipt ID |");
+            System.out.println("--------------------");
+            for (int i=0; i<currUserReceipts.size(); i++) {
+                System.out.printf("| %-3d | %-10d |\n", i+1, currUserReceipts.get(i).getId());
+            }
+            System.out.println("--------------------\n");
+            int err;
+            do {
+                err = 0;
+                try {
+                    System.out.printf("Enter receipt ID [0 to go back] : ");
+                    recId = scan.nextInt();
+                    scan.nextLine();
+                } catch (Exception e) {
+                    err = 1;
+                    scan.nextLine();
+                }
+            } while (err == 1);
+
+            if (recId == 0) {
+                return;
+            }
+
+            boolean found = false;
+            for (int i=0; i<currUserReceipts.size(); i++) {
+                if (recId == currUserReceipts.get(i).getId()) {
+                    recIdx = i;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                System.out.println("Receipt is not found!");
+                System.out.println("Press any key to continue . . .");
+                scan.nextLine();
+                continue;
+            }
+            break;
+        } while (true);
+
+        displayReceipt(recIdx);
+    }
+
+    private void displayReceipt(int recIdx) {
+        Receipt currUserReceipt = users.get(currUserIdx).getReceipts().get(recIdx);
+        ArrayList<Product> currUserReceiptsProducts = currUserReceipt.getProducts();
+        System.out.println("Padie Shop");
+        System.out.println("---------------------------------------");
+        System.out.printf("ID: #%d\n\n", currUserReceipt.getId());
+        for (int i=0; i<currUserReceiptsProducts.size(); i++) {
+            if (currUserReceiptsProducts.get(i) instanceof Food) {
+                Food food = (Food)currUserReceiptsProducts.get(i);
+                System.out.printf("%d. %s - Rp %d\n", i+1, food.getName(), food.getPrice());
+                System.out.printf("    - Expire date: %s\n", food.getExpiredDate());
+            }
+            else if (currUserReceiptsProducts.get(i) instanceof Cloth) {
+                Cloth cloth = (Cloth)currUserReceiptsProducts.get(i);
+                System.out.printf("%d. %s - Rp %d\n", i+1, cloth.getName(), cloth.getPrice());
+                System.out.printf("    - Size: %s\n", cloth.getSize());
+            } else {
+                Technology tech = (Technology)currUserReceiptsProducts.get(i);
+                System.out.printf("%d. %s - Rp %d\n", i+1, tech.getName(), tech.getPrice());
+                System.out.printf("    - Version: %s\n", tech.getVersion());
+            }
+        }
+        System.out.println("---------------------------------------");
+        System.out.println("Quantity    : " + currUserReceiptsProducts.size());
+        System.out.println("Total price : " + currUserReceipt.getTotalPrice());
+        System.out.println("\nPress any key to continue . . .");
+        scan.nextLine();
     }
 
     private void addMoney() {
@@ -310,6 +394,7 @@ public class Main {
                 System.out.println("Login successful");
                 System.out.println("Press any key to continue . . .");
                 currUserIdx = i;
+                cart = users.get(currUserIdx).getCart();
                 mainMenu();
                 return;
             }
